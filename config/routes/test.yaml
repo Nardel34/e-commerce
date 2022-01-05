@@ -1,6 +1,0 @@
-test:
-  path: /test/{age<\d+>?0} #? = defaults, <> = requirements
-  controller: App\Controller\TestController::test
-  methods: [GET, POST]
-  host: localhost #{subdomain}.monsite.com
-  schemes: [https, http] #contrainte http ou https
