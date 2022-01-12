@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Taxes\Calculator;
-use Cocur\Slugify\Slugify;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response;
+// use App\Taxes\Calculator;
+// use App\Detec\Detection;
+// use Cocur\Slugify\Slugify;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ExoController
+class ExoController extends AbstractController
 {
     // protected $Calculator;
 
@@ -17,17 +17,16 @@ class ExoController
     //     $this->Calculator = $calculator;
     // }
 
-
     #[Route("/hello/{nom?World}", name: "exo")]
-    public function hello($nom, LoggerInterface $logger, Calculator $calculator, Slugify $slugify)
+    public function hello($nom = "World") // , LoggerInterface $logger, Calculator $calculator, Slugify $slugify, Environment $twig, Detection $Detect
     {
-        $slugify = new Slugify();
 
-        dd($slugify->slugify('hello world'));
-        $logger->error("message de log");
+        return $this->render("hello.html.twig", ['nom' => $nom]);
+    }
 
-        $TVA = $calculator->calcul(100);
-
-        return new Response("Hello $nom");
+    #[Route('/exemple', name: 'exemple')]
+    public function exemple()
+    {
+        return $this->render("exemple.html.twig", ['age' => 33]);
     }
 }
