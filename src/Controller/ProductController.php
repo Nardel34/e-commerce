@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -66,7 +67,7 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             // $product = new Product;
             // $product->setName($data['name'])
@@ -92,14 +93,59 @@ class ProductController extends AbstractController
         return $this->render('product/create.html.twig', ['formView' => $formView]);
     }
     #[route('/admin/product/{id}/edit', name: 'product_edit')]
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, ValidatorInterface $validator)
     {
+        //---------------------------Début validator--------------------------------
+        // $age = 100;
+        // $client = [
+        //     'nom' => 'Nardella',
+        //     'prenom' => 'Victor',
+        //     'voiture' => [
+        //         'marque' => 'renault',
+        //         'couleur' => ''
+        //     ]
+        // ];
+
+        // $collection = new Collection([
+        //     'nom' => new NotBlank(['message' => "Le nom ne doit pas êtres vide"]),
+        //     'prenom' => [
+        //         new NotBlank(['message' => "Le prenom ne doit pas être vide"]),
+        //         new Length(['min' => 3, 'minMessage' => "Le prénom ne doit pas faire moins de 34 charactères"])
+        //     ],
+        //     'voiture' => new Collection([
+        //         'marque' => new NotBlank(['message' => "La marque de la voiture est obligatoire"]),
+        //         'couleur' => new NotBlank(['message' => "La couleur de la voiture est obligatoire"])
+        //     ])
+        // ]);
+
+        // $resultat = $validator->validate($client, $collection);
+
+        // $resultat = $validator->validate($age, [
+        //     new LessThanOrEqual([
+        //         'value' => 90,
+        //         'message' => "L'âge doit être inférieur à {{compared_value}}, vous avez donné {{value}}"
+        //     ]),
+        //     new GreaterThan([
+        //         'value' => 0,
+        //         'message' => "L'âge doit être supérieur à 0"
+        //     ])
+        // ]); 
+
+
+        // $product = new Product;
+
+        // $resultat = $validator->validate($product);
+
+        // if ($resultat->count() > 0) dd("ERREUR", $resultat);
+        // dd('Tout est bon');
+
+
         $product = $productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product); // $form->setData($product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->flush();
 
