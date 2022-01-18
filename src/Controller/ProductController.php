@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
-    #[Route('/{slug}', name: 'product_category')]
+    #[Route('/{slug}', name: 'product_category', priority: -1)]
     public function category($slug, CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findOneBy(['slug' => $slug]);
@@ -141,6 +141,8 @@ class ProductController extends AbstractController
 
 
         $product = $productRepository->find($id);
+
+        if (!$product) throw new NotFoundHttpException("Ce produit n'existe pas");
 
         $form = $this->createForm(ProductType::class, $product); // $form->setData($product);
         $form->handleRequest($request);

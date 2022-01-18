@@ -50,7 +50,7 @@ class ProductType extends AbstractType
                 'class' => Category::class, // $option
                 'choice_label' =>  function (Category $category) {
                     return strtoupper($category->getName());
-                } //'name'
+                }, //'name'
             ]);
 
 
