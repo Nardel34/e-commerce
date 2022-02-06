@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -35,7 +36,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/inscription', name: 'security_inscription')]
-    public function inscription(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $hasher)
+    public function inscription(Request $request, EntityManagerInterface $em, UserPasswordHasher $hasher)
     {
         $user = new User;
         $form = $this->createForm(InscriptionType::class, $user);
@@ -43,7 +44,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($hasher->encodePassword($user, $user->getPassword()));
+            $user->setPassword($hasher->hashPassword($user, $user->getPassword()));
 
             $em->persist($user);
             $em->flush();

@@ -34,7 +34,7 @@ class ProductController extends AbstractController
     public function category($slug, CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findOneBy(['slug' => $slug]);
-        if (!$category) throw $this->createNotFoundException("Le categorie n'existe pas");
+        if (!$category) throw $this->createNotFoundException("La categorie n'existe pas");
 
         return $this->render('product/category.html.twig', [
             'slug' => $slug,
